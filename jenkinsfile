@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -6,6 +7,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -27,6 +29,14 @@ pipeline {
         stage('Execution') {
             steps {
                 bat '"C:\\Users\\dell\\AppData\\Local\\Programs\\Python\\Python310\\python.exe" app.py'
+            }
+        }
+
+        stage('Packaging') {
+            steps {
+                bat 'if not exist dist mkdir dist'
+                bat 'powershell -Command "Compress-Archive -Path app.py -DestinationPath dist\\python-app.zip -Force"'
+                archiveArtifacts artifacts: 'dist/*.zip'
             }
         }
     }
