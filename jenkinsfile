@@ -1,20 +1,32 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven'
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Syntax Check') {
+
+        stage('Compilation') {
             steps {
-                bat 'python -m py_compile app.py'
+                bat '"C:\\Users\\dell\\AppData\\Local\\Programs\\Python\\Python310\\python.exe" -m py_compile app.py test_app.py'
             }
         }
-        stage('Run Application') {
+
+        stage('Testing') {
             steps {
-                bat 'python app.py'
+                bat 'mvn test'
+            }
+        }
+
+        stage('Execution') {
+            steps {
+                bat '"C:\\Users\\dell\\AppData\\Local\\Programs\\Python\\Python310\\python.exe" app.py'
             }
         }
     }
